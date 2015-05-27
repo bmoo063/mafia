@@ -1,0 +1,7 @@
+MAS mafia {
+
+	infrastructure: Centralised
+	
+	agents:	mafiaAgent #10;
+			gameController agentArchClass GameGUI;
+}
