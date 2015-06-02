@@ -42,12 +42,22 @@
 		.nth(0, S, A);
 		+is_mafia(A).
 		
-+is_mafia(A) : debating & .my_name(M) & villager(M)
++is_mafia(A) : debating & .my_name(M) & villager(M) & not dead(A)
 	<-	.broadcast(tell, accuse(A)).
 	
 
 // Mafia
++debating : .my_name(M) & mafia(M) & is_target(A) & not dead(A)
+	<-	.broadcast(tell, accuse(A)).
 	
++debating : .my_name(M) & mafia(M) & not is_target(_)
+	<-	.all_names(N);
+		.findall(X, mafia(X) & not dead(X), L);
+		.difference(N, L, Y);
+		.delete(gameController, Y, V);
+		.shuffle(V, S);
+		.nth(0, S, A);
+		.broadcast(tell, accuse(A)).
 	
 ////////////////////////////////////////////////////////////////////////////////
 // Rules for voting
