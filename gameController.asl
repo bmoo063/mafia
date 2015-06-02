@@ -4,7 +4,7 @@
 		.broadcast(untell, mafiaDiscussing);
 		.all_names(Y);
 		.delete(gameController, Y, N);
-		.findall(X, mafia(X), M);
+		.findall(X, mafia(X) & not dead(X), M);
 		.difference(N, M, V);
 		.length(M, LM);
 		.length(V, LV);
@@ -21,11 +21,12 @@
 		.print("The Mafia meet during the night...");
 		.broadcast(untell, voting).
 
-+dead(A) : true
++dead(A) : not lynched(A)
 	<-	.print(A, " has been killed by the mafia").
 	
 +lynched(A) : true
-	<-	.print(A, " has been lynched by the village").
+	<-	+dead(A);
+		.print(A, " has been lynched by the village").
 	
 +deny[source(S)] : true
 	<- 	display_deny(S);
