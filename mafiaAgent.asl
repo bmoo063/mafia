@@ -26,7 +26,7 @@
 // Rules for debating
 	
 // Villager
-+debating : .my_name(M) & villager(M) & is_mafia(A)
++debating : .my_name(M) & villager(M) & is_mafia(A) & not dead(A)
 	<-	.broadcast(tell, accuse(A)).
 	
 +debating : .my_name(M) & villager(M) & accused(S, A) & dead(S)

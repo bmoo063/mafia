@@ -1,6 +1,7 @@
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.Font;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -57,6 +58,9 @@ public class GameGUI extends AgArch {
 		c.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 		guiText.setLineWrap(true);
 		
+		Font f = new Font("Arial", Font.PLAIN, 20);
+		guiText.setFont(f);
+		
 		guiBtnNextstate = new JButton("Next State");
 		guiBtnNextstate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -109,6 +113,7 @@ public class GameGUI extends AgArch {
 		guiFrame.getContentPane().add(BorderLayout.CENTER, new JScrollPane(guiText));
 		guiFrame.getContentPane().add(BorderLayout.SOUTH, guiPanelButtons);
 		guiFrame.pack();
+		guiFrame.setBounds(100, 50, 1000, 800);
 		guiFrame.setVisible(true);
 		
 		mvotes = new HashMap<String, Integer>();
@@ -187,6 +192,10 @@ public class GameGUI extends AgArch {
 			
 			mvoteCount++;
 			
+			if (humanMafia && humanAlive){
+				guiText.append("[" + m + "] Votes to kill " + v + "\n");
+			}
+			
 			if (mvoteCount == numMafia){
 				Map.Entry<String, Integer> maxEntry = null;
 				for (Map.Entry<String, Integer> entry : mvotes.entrySet()) {
@@ -225,7 +234,16 @@ public class GameGUI extends AgArch {
 	
 	public void prepareDebate() {
 		if (!testWinConditions()){
-			guiText.append("All Townsfolk awaken as dawn breaks...\n");
+			agents = new HashSet<String>(getRuntimeServices().getAgentsNames());
+			agents.remove("gameController");
+			
+			guiText.append("\n" + agents.size() + " agents remain :\n[ ");
+			
+			for (String a : agents){
+				guiText.append(a + ", ");
+			}
+		
+			guiText.append("]\n\nAll Townsfolk awaken as dawn breaks...\n");
 			Literal goal = ASSyntax.createLiteral("start_debate");
 			getTS().getC().addAchvGoal(goal, null);
 		}
@@ -239,7 +257,7 @@ public class GameGUI extends AgArch {
 	}
 
 	public void prepareVote() {
-		guiText.append("The Townsfolk put it to a vote...\n");
+		guiText.append("\nThe Townsfolk put it to a vote...\n");
 		Literal goal = ASSyntax.createLiteral("start_vote");
 		getTS().getC().addAchvGoal(goal, null);
 		vvotes.clear();
@@ -253,7 +271,7 @@ public class GameGUI extends AgArch {
 	
 	public void prepareMafia(){
 		if (!testWinConditions()){
-			guiText.append("The Mafia meet during the night...\n");
+			guiText.append("\nThe Mafia meet during the night...\n");
 			Literal goal = ASSyntax.createLiteral("start_mafia");
 			getTS().getC().addAchvGoal(goal, null);
 			mvotes.clear();
@@ -297,6 +315,7 @@ public class GameGUI extends AgArch {
 				
 			case END:
 				System.out.println("The game is over now, you can go home");
+				guiText.append("\nThe game is over now, you can go home");
 				
 			default:
 				break;
@@ -438,10 +457,9 @@ public class GameGUI extends AgArch {
 			for (String m : mafia){
 				guiText.append("\t" + m + "\n");
 			}
-			guiText.append("\n");
 		} else {
 			humanMafia = false;
-			guiText.append("You have been assigned the role of a Villager\n\n");
+			guiText.append("You have been assigned the role of a Villager\n");
 		}
 		humanAlive = true;
 	}
@@ -463,14 +481,17 @@ public class GameGUI extends AgArch {
 		
 		if (numM == 0) {
 			System.out.println("All Mafia are dead, Villagers win!");
+			guiText.append("\nAll Mafia are dead, Villagers win!");
 			state = GameState.END;
 			return true;
 		} else if (numM > numV && state == GameState.DEBATE) {
 			System.out.println("Mafia outnumber the Villagers, Mafia win!");
+			guiText.append("\nMafia outnumber the Villagers, Mafia win!");
 			state = GameState.END;
 			return true;
 		} else if (numM >= numV && state == GameState.MAFIA) {
 			System.out.println("Mafia outnumber the Villagers, Mafia win!");
+			guiText.append("\nMafia outnumber the Villagers, Mafia win!");
 			state = GameState.END;
 			return true;
 		} else return false;
