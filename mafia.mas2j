@@ -2,6 +2,7 @@ MAS mafia {
 
 	infrastructure: Centralised
 	
-	agents:	mafiaAgent #10;
+	agents:	mafiaAgent #9;
+			human;
 			gameController agentArchClass GameGUI;
 }

@@ -1,6 +1,7 @@
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
@@ -34,6 +35,8 @@ public class GameGUI extends AgArch {
 	int			vvoteCount;
 	String		lastDead;
 	String		lastLynch;
+	boolean		humanMafia;
+	boolean		humanAlive;
 
 	JTextArea	guiText;
 	JFrame		guiFrame;
@@ -43,6 +46,8 @@ public class GameGUI extends AgArch {
 	JButton		guiBtnNextstate;
 	JButton		guiBtnAccuse;
 	JButton		guiBtnDefend;
+	JButton		guiBtnVote;
+	JButton		guiBtnMVote;
 	
 	int day = 0;
 	
@@ -61,11 +66,32 @@ public class GameGUI extends AgArch {
 		guiBtnAccuse	= new JButton("Accuse");
 		guiBtnDefend	= new JButton("Defend");
 		
+		guiBtnVote		= new JButton("Vote");
+		guiBtnVote.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				humanVote();
+			}
+		});
+		
+		guiBtnMVote		= new JButton("Mafia Vote");
+		guiBtnMVote.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				mafiaVote();
+			}
+		});
+		
+		guiBtnAccuse.setEnabled(false);
+		guiBtnDefend.setEnabled(false);
+		guiBtnVote.setEnabled(false);
+		guiBtnMVote.setEnabled(false);
+		
 		guiPanelButtons = new JPanel();
 		guiPanelButtons.setLayout(new BoxLayout(guiPanelButtons, BoxLayout.X_AXIS));
 		guiPanelButtons.add(guiBtnNextstate);
 		guiPanelButtons.add(guiBtnAccuse);
 		guiPanelButtons.add(guiBtnDefend);
+		guiPanelButtons.add(guiBtnVote);
+		guiPanelButtons.add(guiBtnMVote);
 		
 		guiFrame = new JFrame("Multi-Agent Mafia");
 		guiFrame.getContentPane().setLayout(new BorderLayout());
@@ -114,6 +140,7 @@ public class GameGUI extends AgArch {
 				}
 				
 				lastLynch = maxEntry.getKey();
+				if (lastLynch.equals("human")) humanAlive = false;
 				
 				getRuntimeServices().killAgent(lastLynch, getAgName());
 				numAgents--;
@@ -155,6 +182,7 @@ public class GameGUI extends AgArch {
 					}
 				}
 				lastDead = maxEntry.getKey();
+				if (lastDead.equals("human")) humanAlive = false;
 
 				
 				getTS().getUserAgArch().getRuntimeServices().killAgent(lastDead, getTS().getUserAgArch().getAgName());
@@ -189,6 +217,13 @@ public class GameGUI extends AgArch {
 			Literal goal = ASSyntax.createLiteral("start_debate");
 			getTS().getC().addAchvGoal(goal, null);
 		}
+		
+		
+		if (humanMafia) guiBtnMVote.setEnabled(false);
+		if (humanAlive){
+			guiBtnAccuse.setEnabled(true);
+			guiBtnDefend.setEnabled(true);
+		}
 	}
 
 	public void prepareVote() {
@@ -197,6 +232,11 @@ public class GameGUI extends AgArch {
 		getTS().getC().addAchvGoal(goal, null);
 		vvotes.clear();
 		vvoteCount = 0;
+		
+		guiBtnAccuse.setEnabled(false);
+		guiBtnDefend.setEnabled(false);
+		
+		if (humanAlive) guiBtnVote.setEnabled(true);
 	}
 	
 	public void prepareMafia(){
@@ -211,6 +251,10 @@ public class GameGUI extends AgArch {
 			mvotes.clear();
 			mvoteCount = 0;
 		}
+		
+		guiBtnVote.setEnabled(false);
+		
+		if (humanMafia && humanAlive) guiBtnMVote.setEnabled(true);
 	}
 	
 	public void manageState() {
@@ -251,6 +295,59 @@ public class GameGUI extends AgArch {
 		}
 	}
 	
+	public void humanVote() {
+		agents = new HashSet<String>(getRuntimeServices().getAgentsNames());
+		agents.remove("gameController");
+		
+		String[] possiblities = agents.toArray(new String[agents.size()]);
+		Arrays.sort(possiblities);
+		
+		String a = (String)JOptionPane.showInputDialog(
+						guiFrame,
+						"Choose an agent to vote to be lynched",
+						"Voting",
+						JOptionPane.PLAIN_MESSAGE,
+						null,
+						possiblities,
+						possiblities[0]);
+						
+		if (a != null ) {
+			Message msg;
+			try{
+				msg = new Message("tell", "human", "gameController", ASSyntax.parseLiteral("vote(" + a + ")"));
+				sendMsg(msg);
+			} catch (Exception e){
+				System.out.println("Failed to send human vote");
+			}
+		}
+	}
+	
+	public void mafiaVote() {
+		agents = new HashSet<String>(getRuntimeServices().getAgentsNames());
+		agents.remove("gameController");
+		
+		String[] possiblities = agents.toArray(new String[agents.size()]);
+		Arrays.sort(possiblities);
+		
+		String a = (String)JOptionPane.showInputDialog(
+						guiFrame,
+						"Choose an agent for mafia to kill",
+						"Voting",
+						JOptionPane.PLAIN_MESSAGE,
+						null,
+						possiblities,
+						possiblities[0]);
+						
+		if (a != null ) {
+			Message msg;
+			try{
+				msg = new Message("tell", "human", "gameController", ASSyntax.parseLiteral("mvote(" + a + ")"));
+				sendMsg(msg);
+			} catch (Exception e){
+				System.out.println("Failed to send human vote");
+			}
+		}
+	}
 	
 	@Override
 	public void init() throws Exception {
@@ -280,6 +377,11 @@ public class GameGUI extends AgArch {
 				}
 			} else sendMsg(new Message("tell", getAgName(), a, ASSyntax.parseLiteral("villager(" + a + ")")));
 		}
+		
+		if (mafia.contains("human")){
+			humanMafia = true;
+		}
+		humanAlive = true;
 	}
 	
 	
