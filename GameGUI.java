@@ -64,7 +64,18 @@ public class GameGUI extends AgArch {
 			}
 		});
 		guiBtnAccuse	= new JButton("Accuse");
+		guiBtnAccuse.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				humanAccuse();
+			}
+		});
+		
 		guiBtnDefend	= new JButton("Defend");
+		guiBtnDefend.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				humanDefend();
+			}
+		});
 		
 		guiBtnVote		= new JButton("Vote");
 		guiBtnVote.addActionListener(new ActionListener() {
@@ -142,6 +153,8 @@ public class GameGUI extends AgArch {
 				lastLynch = maxEntry.getKey();
 				if (lastLynch.equals("human")) humanAlive = false;
 				
+				guiText.append(lastLynch + " has been chosed by the majority to be lynched...\n");
+				
 				getRuntimeServices().killAgent(lastLynch, getAgName());
 				numAgents--;
 				if (mafia.contains(lastLynch)) numMafia--;
@@ -183,6 +196,8 @@ public class GameGUI extends AgArch {
 				}
 				lastDead = maxEntry.getKey();
 				if (lastDead.equals("human")) humanAlive = false;
+				
+				guiText.append(lastDead + " appears to have met his demise, a knife protrudes from his left ear ...\n");
 
 				
 				getTS().getUserAgArch().getRuntimeServices().killAgent(lastDead, getTS().getUserAgArch().getAgName());
@@ -209,9 +224,6 @@ public class GameGUI extends AgArch {
 	}
 	
 	public void prepareDebate() {
-		if (lastDead != null && !lastDead.isEmpty()){
-			guiText.append(lastDead + " appears to have met his demise, a knife protrudes from his left ear ...\n");
-		}
 		if (!testWinConditions()){
 			guiText.append("All Townsfolk awaken as dawn breaks...\n");
 			Literal goal = ASSyntax.createLiteral("start_debate");
@@ -240,10 +252,6 @@ public class GameGUI extends AgArch {
 	}
 	
 	public void prepareMafia(){
-		if (lastLynch != null && !lastLynch.isEmpty()){
-			guiText.append(lastLynch + " has been chosed by the majority to be lynched...\n");
-		}
-		
 		if (!testWinConditions()){
 			guiText.append("The Mafia meet during the night...\n");
 			Literal goal = ASSyntax.createLiteral("start_mafia");
@@ -292,6 +300,51 @@ public class GameGUI extends AgArch {
 				
 			default:
 				break;
+		}
+	}
+	
+	public void humanAccuse() {
+		agents = new HashSet<String>(getRuntimeServices().getAgentsNames());
+		agents.remove("gameController");
+		
+		String[] possiblities = agents.toArray(new String[agents.size()]);
+		Arrays.sort(possiblities);
+		
+		String a = (String)JOptionPane.showInputDialog(
+						guiFrame,
+						"Choose an agent to accuse",
+						"Accusing",
+						JOptionPane.PLAIN_MESSAGE,
+						null,
+						possiblities,
+						possiblities[0]);
+						
+		if (a != null ) {
+			Message msgs;
+			Message msgb;
+			try{
+				msgb = new Message("tell", "human", null, ASSyntax.parseLiteral("accuse(" + a + ")"));
+				broadcast(msgb);
+				
+				msgs = new Message("tell", "human", "gameController", ASSyntax.parseLiteral("accuse(" + a + ")"));
+				sendMsg(msgs);
+			} catch (Exception e){
+				System.out.println("Failed to broadcast accusation");
+			}
+		}
+	}
+	
+	public void humanDefend() {
+		Message msgb;
+		Message msgs;
+		try{
+			msgb = new Message("tell", "human", null, ASSyntax.parseLiteral("deny"));
+			broadcast(msgb);
+			
+			msgs = new Message("tell", "human", "gameController", ASSyntax.parseLiteral("deny"));
+			sendMsg(msgs);
+		} catch (Exception e){
+			System.out.println("Failed to send deny");
 		}
 	}
 	
@@ -344,7 +397,7 @@ public class GameGUI extends AgArch {
 				msg = new Message("tell", "human", "gameController", ASSyntax.parseLiteral("mvote(" + a + ")"));
 				sendMsg(msg);
 			} catch (Exception e){
-				System.out.println("Failed to send human vote");
+				System.out.println("Failed to send mafia vote");
 			}
 		}
 	}
@@ -380,10 +433,18 @@ public class GameGUI extends AgArch {
 		
 		if (mafia.contains("human")){
 			humanMafia = true;
+			guiText.append("You have been assigned the role of a Mafia\n\n");
+			guiText.append("The mafia are:\n");
+			for (String m : mafia){
+				guiText.append("\t" + m + "\n");
+			}
+			guiText.append("\n");
+		} else {
+			humanMafia = false;
+			guiText.append("You have been assigned the role of a Villager\n\n");
 		}
 		humanAlive = true;
 	}
-	
 	
 	public boolean testWinConditions(){
 		agents = new HashSet<String>(getRuntimeServices().getAgentsNames());
