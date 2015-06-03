@@ -81,7 +81,7 @@ dgal061\\
 
 \subsection{Overview} 
 
-Mafia [1] is a social party game where an informed minority, the mafia, conflicts with an uninformed majority, the innocents. The game is typically played with seven to ten players, with two to three mafia for best results. Many variations on the rules exist, but the basic game focuses on the village as a whole debating the identities of the mafia and voting on one player to lynch during the day, with the mafia choosing one player to kill during the night. The game ends when all the mafia have been eliminated, or the mafia outnumber the innocents. Outside of these rules, the players may do anything to try convince the other players of their innocence, or accuse another player of being mafia. 
+Mafia~\cite{PRI2015} is a social party game where an informed minority, the mafia, conflicts with an uninformed majority, the innocents. The game is typically played with seven to ten players, with two to three mafia for best results. Many variations on the rules exist, but the basic game focuses on the village as a whole debating the identities of the mafia and voting on one player to lynch during the day, with the mafia choosing one player to kill during the night. The game ends when all the mafia have been eliminated, or the mafia outnumber the innocents. Outside of these rules, the players may do anything to try convince the other players of their innocence, or accuse another player of being mafia. 
 
 Other roles can be assigned, including a medic and a sheriff. The medic has an opportunity during the night to select one individual to be saved, should they be targeted by the mafia. The sheriff has an opportunity during the night to select one individual and be informed by the game master whether that person is mafia or not. 
  
@@ -95,9 +95,9 @@ One potential way to make the inferences about agents roles more complex is to g
 
 \subsection{Motivation} 
 
-Mafia allows for a variety of challenges from mathematical, computational, and cognitive standpoints. Braverman et al. [2] shows extensive mathematical modelling can be applied to even a simple environment. Computationally it follows from from the likes of the Facade and Versu systems in having a simulated set of agents interacting with a user in order to tell a story. The simulated agents also need to interact with each other, as each agent is independent. 
+Mafia allows for a variety of challenges from mathematical, computational, and cognitive standpoints. Braverman et al.~\cite{BRA2008} shows extensive mathematical modelling can be applied to even a simple environment. Computationally it follows from from the likes of the Facade and Versu systems in having a simulated set of agents interacting with a user in order to tell a story. The simulated agents also need to interact with each other, as each agent is independent. 
 
-Haan et al. [3] have previously implemented a simple mafia playing agent to demonstrate their multi-agent framework, however little reasoning of other agents true beliefs was performed. Our goal is for agents (both real and simulated) to be able to make inferences as to the true status of other agents based on individual announcements and other observables, and perhaps uniquely it requires agents to lie and identify the lies of others. This is a cognitively demanding task, so it will be interesting to see if we can find ways to make the agents intelligently deceptive. 
+Haan et al.~\cite{HAA2004} have previously implemented a simple mafia playing agent to demonstrate their multi-agent framework, however little reasoning of other agents true beliefs was performed. Our goal is for agents (both real and simulated) to be able to make inferences as to the true status of other agents based on individual announcements and other observables, and perhaps uniquely it requires agents to lie and identify the lies of others. This is a cognitively demanding task, so it will be interesting to see if we can find ways to make the agents intelligently deceptive. 
 
 
 %------------------------------------------------
@@ -126,7 +126,13 @@ The game master again assesses whether the game end conditions are met. If not, 
 
 \section{Design}
 
-We intend to implement our multi-agent system using Jason [4], a multi-agent systems development platform. The AgentSpeak language is used to program the behaviour of individual agents, based on the belief-desire-intention software model. Jason is developed in Java and is easily customised, which will allow us to quickly implement a game master and graphical interface to interact with, while we work on building the cognitive agents.
+We intend to implement our multi-agent system using Jason~\cite{JAS2015}, a multi-agent systems development platform. The AgentSpeak language is used to program the behaviour of individual agents, based on the belief-desire-intention software model. Jason is developed in Java and is easily customised, which will allow us to quickly implement a game master and graphical interface to interact with, while we work on building the cognitive agents.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\linewidth]{Overall.pdf}
+	\caption{Overall architecture of the Multi-Agent Mafia system}
+\end{figure}
 
 \subsection{Overall Architecture}
 
@@ -193,12 +199,25 @@ We intend to implement our multi-agent system using Jason [4], a multi-agent sys
 
 \begin{thebibliography}{99} % Bibliography - this is intentionally simple in this template
 
-%[1] The Graduate Mafia Brotherhood of Princeton University: http://www.princeton.edu/~sucharit/~mafia/. Accessed March (2015)
+\bibitem{PRI2015}
+The Graduate Mafia Brotherhood of Princeton University
+\emph{http://www.princeton.edu/~sucharit/~mafia/}
+Accessed March (2015)
 
-%[2] Braverman, M., Etesami, O., & Mossel, E. (2008). Mafia: A Theoretical Study of Players and Coalitions in a Partial Information Environment. Annals of Applied Probability.
-%[3] Haan, H. W. D., Hesselink, W. H., & Renardel de Lavalette, G. R. (2004). An abstract multi-agent framework applied to a social interaction game. University of Groningen, Johann Bernoulli Institute for Mathematics and Computer Science.
+\bibitem{BRA2008}
+Braverman, M., Etesami, O., Mossel, E. (2008).
+Mafia: A Theoretical Study of Players and Coalitions in a Partial Information Environment.
+Annals of Applied Probability.
 
-%[4] Jason http://sourceforge.net/projects/jason/ Accessed April (2015)
+\bibitem{HAA2004}
+Haan, H. W. D., Hesselink, W. H., Renardel de Lavalette, G. R. (2004).
+An abstract multi-agent framework applied to a social interaction game.
+University of Groningen, Johann Bernoulli Institute for Mathematics and Computer Science.
+
+\bibitem{JAS2015}
+Jason
+\emph{http://sourceforge.net/projects/jason/}
+Accessed April (2015)
 
 %Example Formatting
 
