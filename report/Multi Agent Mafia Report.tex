@@ -134,15 +134,26 @@ The game master again assesses whether the game end conditions are met. If not, 
 
 \section{Design}
 
-We intend to implement our multi-agent system using Jason~\cite{JAS2015}, a multi-agent systems development platform. The AgentSpeak language is used to program the behaviour of individual agents, based on the belief-desire-intention software model. Jason is developed in Java and is easily customised, which will allow us to quickly implement a game master and graphical interface to interact with, while we work on building the cognitive agents.
+\subsection{Overall Architecture}
+
+Our system is implemented using the Jason Multi-Agent System~\cite{JAS2015}, which provides a framework that allows multiple agents to run simultaneously using a logic-programming BDI language called AgentSpeak~\cite{RAO1996}, communicate with each other, and modify the underlying architecture of agents and the environment.
+
+AgentSpeak encodes agents as a set of beliefs and plans. Beliefs are first-order predicates that define the knowledge of the world as the agent knows it. Plans consist of an event trigger (either the addition or deletion of a belief), a context defined as the conjugation of beliefs, and a sequence of actions that the agent has to achieve when a plan is chosen for execution.
+
+The extended implementation of AgentSpeak used in Jason provides two important internal actions: broadcast and sent. These actions allow an agent to either broadcast a message to all other agents, or send a message to a specific agent. Messages consist of an illocutionary force, a sender, a reciever, and a belief literal. Agents communicate their beliefs by broadcasting their accusations and denials to all, or participate in the game by sending their votes to the game controller.
+
+The overall structure of the system is shown in figure~\ref{fig:overallarch}. The Jason interpreter is responsible for distributing messages from a broadcast or send, so all agents interact with each other through this central hub. In this implementation, the game controller is implemented as an agent that does no reasoning, it simply acts as a man in the middle to intercept communication and keep track of the game.
+
+The game controller has a modified agent architecture. This is a feature of Jason whereby we can write Java code that changes how the agent deals with receiving beliefs, in this case it keeps track of the state of the game, and counts votes that are sent by other agents. The game controller is also able to send out beliefs that tell the agents when the state of the game changes, this happens when the user presses the 'next state' button on the interface presented by the game controller.
+
+The final piece of the puzzle, the user, interacts through the game controller interface. The interface consists of buttons that allow the user to perform actions similar to those that the agents can perform, such as accusing, denying, voting during the town vote or voting during the mafia decision. The buttons become enabled and disabled depending on the state of the game and whether or not the human agent is still alive. The game controller broadcasts messages on behalf of the user whenever the user presses the button for a corresponding action.
 
 \begin{figure}
 	\centering
 	\includegraphics[width=\linewidth]{Overall.pdf}
 	\caption{Overall architecture of the Multi-Agent Mafia system}
+	\label{fig:overallarch}
 \end{figure}
-
-\subsection{Overall Architecture}
 
 \subsection{User Modelling}
 
@@ -271,6 +282,11 @@ University of Groningen, Johann Bernoulli Institute for Mathematics and Computer
 Jason
 \emph{http://sourceforge.net/projects/jason/}
 Accessed April (2015)
+
+\bibitem{RAO1996}
+Rao, A. (1996).
+AgentSpeak(:): BDI agents speak out in a logical computable language.
+Lecture Notes in Artificial Intelligence.
 
 %Example Formatting
 
