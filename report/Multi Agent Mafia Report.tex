@@ -12,7 +12,6 @@
 \usepackage{hyperref} % Required for hyperlinks
 
 \usepackage{float} % Allows putting an [H] in \begin{figure} to specify the exact location of the figure
-\usepackage{wrapfig} % Allows in-line images such as the example fish picture
 
 \linespread{1.2} % Line spacing
 
@@ -156,6 +155,34 @@ We intend to implement our multi-agent system using Jason~\cite{JAS2015}, a mult
 \section{Practical}
 
 \subsection{Ilustration}
+
+\begin{figure}[H]
+\centering
+\begin{minipage}{0.49\textwidth}
+\centering
+\includegraphics[width=\linewidth]{mafia-start}
+\caption{Start State}
+\end{minipage}\hfill
+\begin{minipage}{0.49\textwidth}
+\centering
+\includegraphics[width=\linewidth]{mafia-discussion}
+\caption{First round of accusations}
+\end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{minipage}{0.49\textwidth}
+\centering
+\includegraphics[width=\linewidth]{mafia-mafiavote}
+\caption{Mafia agents voting who to kill}
+\end{minipage}\hfill
+\begin{minipage}{0.49\textwidth}
+\centering
+\includegraphics[width=\linewidth]{mafia-townvote}
+\caption{All agents voting who to kill}
+\end{minipage}
+\end{figure}
 
 \subsection{Limitations}
 
