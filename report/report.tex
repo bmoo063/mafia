@@ -105,9 +105,9 @@ One potential way to make the inferences about agents roles more complex is to g
 
 \subsection{Motivation} 
 
-Mafia allows for a variety of challenges from mathematical, computational, and cognitive standpoints. Braverman et al.~\cite{BRA2008} shows extensive mathematical modelling can be applied to even a simple environment. Computationally it follows from from the likes of the Facade and Versu systems in having a simulated set of agents interacting with a user in order to tell a story. The simulated agents also need to interact with each other, as each agent is independent. 
+Mafia allows for a variety of challenges from mathematical, computational, and cognitive standpoints. Braverman et al.~\cite{BRA2008} shows extensive mathematical modelling can be applied to even a simple environment. Computationally it follows from the likes of the Facade and Versu systems in having a simulated set of agents interacting with a user in order to tell a story. The simulated agents also need to interact with each other, as each agent is independent. 
 
-Haan et al.~\cite{HAA2004} have previously implemented a simple mafia playing agent to demonstrate their multi-agent framework, however little reasoning of other agents true beliefs was performed. Our goal is for agents (both real and simulated) to be able to make inferences as to the true status of other agents based on individual announcements and other observables, and perhaps uniquely it requires agents to lie and identify the lies of others. This is a cognitively demanding task, so it will be interesting to see if we can find ways to make the agents intelligently deceptive. 
+Haan et al.~\cite{HAA2004} have previously implemented a simple mafia playing agent to demonstrate their multi-agent framework. However, little reasoning about other agents' true beliefs was performed. Our goal is for agents (both real and simulated) to be able to make inferences as to the true status of other agents based on individual announcements and other observables, and perhaps uniquely it requires agents to lie and identify the lies of others. This is a cognitively demanding task, so it will be interesting to see if we can find ways to make the agents intelligently deceptive. 
 
 %------------------------------------------------
 
@@ -122,9 +122,9 @@ Haan et al.~\cite{HAA2004} have previously implemented a simple mafia playing ag
 
 \section{Analysis}
 
-The game starts with the game master assigning roles randomly to all of the players. The game master initiates a discussion phase, then begins the first night phase. The game master first asks the mafia to decide together who to assassinate. Then the medic is called on to select someone to save. Then the sheriff is called on to investigate one player. The game master announces the results of the night and assesses whether the game end conditions are met. Agents update their knowledge and beliefs based on the results. The game master then moves the game into the discussion phase. Agents can make announcements about their beliefs or ask others about their beliefs. To ensure discussions don’t go on forever we can limit each agent to two speech actions (this is a problem in real life games and the game master has to exercise judgement about when to terminate discussions). The game master then moves the game into the accusation phase. Each agent can accuse up to two other people. The game master then allows the accused to defend themselves. They may make claims about themselves or a belief about another player. For example, “I am the sheriff, and I know Bob is mafia” or just deny the accusation or remain silent. Then each player casts their vote publically. 
+The game starts with the game master assigning roles randomly to all of the players. The game master initiates a discussion phase, then begins the first night phase. The game master first asks the mafia to decide together who to assassinate. Then the medic is called on to select someone to save. Then the sheriff is called on to investigate one player. The game master announces the results of the night and assesses whether the game end conditions are met. Agents update their knowledge and beliefs based on the results. The game master then moves the game into the discussion phase. Agents can make announcements about their beliefs or ask others about their beliefs. To ensure discussions don’t go on forever we can limit each agent to two speech actions (this is a problem in real life games and the game master has to exercise judgement about when to terminate discussions). The game master then moves the game into the accusation phase. Each agent can accuse up to two other people. The game master then allows the accused to defend themselves. They may make claims about themselves or a belief about another player. For example, “I am the sheriff, and I know Bob is mafia” or just deny the accusation or remain silent. Then each player casts their vote publically.
 
-From information about who voted to lynch, inferences can be made, so knowledge about how people voted should be added to each agent’s knowledge base. For example, if one player made an accusation and claimed they were the sheriff and knew the accused was mafia, a vote is taken and the accused is lynched and they turned out to only be a citizen, the accuser was lying. This may lead players to conclude the accuser is mafia. 
+From information about who voted to lynch, inferences can be made, so knowledge about how people voted should be added to each agent’s knowledge base. For example, if one player made an accusation and claimed they were the sheriff and knew the accused was mafia, a vote is taken and the accused is lynched and they turned out to only be a citizen, the accuser was lying. This may lead players to conclude the accuser is mafia.
 
 The game master again assesses whether the game end conditions are met. If not, another round of discussion takes place. Then another night falls and the night cycle repeats until one team has won.
 
@@ -157,14 +157,7 @@ The final piece of the puzzle, the user, interacts through the game controller i
 
 \subsection{User Modelling}
 
-User modelling is quite simple in our system. Every public interaction made during the game is stored in the belief base of all agents, these include accusations, denials, who voted for who during town voting, who was lynched and who died at the hands of the mafia. These beliefs are used in the context of plans to update knowledge on who the agent believes is mafia (or who is a target to kill if the agent is mafia themself).
-
-
 \subsection{Planning Logic}
-
-Jason and AgentSpeak provide powerful constructs for adding goals, which manifest as desires in BDI terminoligy. These goals or desires can be used to allow an agent to plan out in the long term a 'strategy' to use, such as focusing on convincing a particular agent it isn't mafia. In our implementation we haven't used any of these long term goals, so the agents are only reactive and pick the first set of beliefs that satisfies a plan when a plan is executed.
-
-Our system does have some rules that allow it to reason about who is mafia or a target, which encode how an agent plans to vote during voting stages of the game. An example would be a rule that says if agent A accused agent B, and the mafia killed agent A during the night, then agent B was likely an accurate accusation. However mafia can take advantage of this situation too: if A accuses B, B is not mafia, and mafia don't have a particular target to kill, then B could be a good choice to lead villagers astray. This problem is mentioned in the limitations section of our report.
 
 %----------------------------------------------------------------------------------------
 %	Practical
@@ -192,7 +185,7 @@ Unlike other systems which may have to work with abstract test cases, the advant
 \end{minipage}
 \end{figure}
 
-Figure \ref{fig:start} is an example of what appears upon initiation of the system, it allows an agent to see their randomly assigned role and, in the case of mafia, who the other mafia agents are. Figure \ref{fig:discussion} shows what, if anything, each agent publically announces. The actions the player may take in the current implementation are limited to simply accusing another agent, or defending one who has already been accused. Taken to it's extreme this could be accomplished with a natural language interface, this is sufficient as a demonstration of the system.
+Figure \ref{fig:start} is an example of what appears upon initiation of the system, it allows an agent to see their randomly assigned role and, in the case of mafia, who the other mafia agents are. Figure \ref{fig:discussion} shows what, if anything, each agent publically announces. The actions the player may take in the current implementation are limited to simply accusing another agent, or defending one who has already been accused. A fully fleshed out system would allow speech acts to be expressed with natural language. However, this is sufficient for a demonstration of the system.
 
 \begin{figure}[H]
 \centering
@@ -210,24 +203,24 @@ Figure \ref{fig:start} is an example of what appears upon initiation of the syst
 \end{minipage}
 \end{figure}
 
-From here each agent decides who, if anyone, will be eliminated from the game. Figure \ref{fig:tvote} shows the voting interface. We opted for a simple one agent one vote strategy to allow so quick gameplay, as opposed to interative voting until an absolute majority is reached. This can be explained in game terms as a private vote as opposed to a public one. While the system could be modified there is little reason to at this point due to limitations on available discourse options. Finally figure \ref{fig:mvote} shows what happens during the night. As opposed to previous steps which everyone sees, these are all private to like typed agents. Again, a simple majority is all that is required for the mafia. A villager on the other hand simply sleeps through the night (although some don't wake up).
+From here each agent decides who, if anyone, will be eliminated from the game. Figure \ref{fig:tvote} shows the voting interface. We opted for a simple one agent/one vote strategy to allow for quick gameplay, as opposed to iterative voting until an absolute majority is reached. This can be explained in game terms as a private vote as opposed to a public one. While the system could be modified there is little reason to at this point due to limitations on available discourse options. Finally figure \ref{fig:mvote} shows what happens during the night. As opposed to previous steps, which everyone sees, these are all private to particular types of agents. Again, a simple majority is all that is required for the mafia. A villager on the other hand simply sleeps through the night (although some don't wake up).
 
 \subsection{Limitations}
 
 There are four key components which could further be implemented. Those being roles, personality, memory, and discourse.
 
 \subsubsection{Roles}
-We only implemented the simplest roles required to form a coherent game, those being villagers and mafia. There are other roles that could be assigned however. These include the doctor who, after the mafia has selected a victim, is allowed to choose one person to live through the night, and the sheriff who once each night can consult the system for the role of another agent.
+We only implemented the simplest roles required to form a coherent game, those being villagers and mafia. There are other roles from the game that could be assigned. These include the doctor, who can make one person immune to the Mafia, and the sheriff, who once each night can consult the system and learn the role of another agent.
 
 \subsubsection{Personality}
-Each agent within the system is presently homogeneous. With further development we could see the agents gaining their own seperate attribtes and personalities. For instance one agent could be partiularly charismatic allowing other agents to be more easily convinced by their accusations. Two agents could perhaps feud, leading them to often accuse each othe regardless of plausability. Individual agents may also have tells, such as a stutter or becoming flush, indicating they may be lying.
+Each agent within the system is presently homogeneous. With further development we could see the agents gaining their own seperate attributes and personalities. For instance, one agent could be partiularly charismatic. Other agents would be more likely to believe statements made by the charismatic agent. Two agents could perhaps feud, leading them to often accuse each other regardless of plausability. Individual agents may also have tells, such as a stutter or blushing, indicating they may be lying.
 
 
 \subsubsection{Memory}
-At present each game takes place in isolation. Further implementation would perhaps allow for a continued memory for the agents. Allowing for grudges that last between games, and forming opinions on the honesty and charisma of other agents.
+At present each game takes place in isolation. Further implementation would perhaps allow persistent memory for the agents. Grudges could be held that last between games. Agents would form opinions on the honesty and charisma of other agents based on their past actions.
 
 \subsubsection{Discourse}
-In it's simplest form we implemented only the ability to 'accuse' and 'deny' membership of the mafia. While a full natural language interface might be achievable, we would focus more on expanding how each of those actions take place. Accusations through inference "agents 1 accused agents 5, now agent 1 is dead" vs passion "agent 3 was mafia last game and they killed me!". Even during the voting stages perhaps being able to defend others to sway certain votes.
+In it's simplest form we implemented only the ability to 'accuse' and 'deny' membership of the mafia. While a full natural language interface might be achievable, we would focus more on expanding how each of those actions take place. Accusations could be arrived at through inference: "agent 1 accused agent 5, and now agent 1 is dead, so agent 5 must have recognised agent 1 as a threat and killed him" or through emotion: "agent 3 was mafia last game and they killed me!". Also, during the voting stages an eloquent defense of the accused could sway the votes of others.
 
 \subsection{Demonstration}
 
@@ -246,11 +239,11 @@ Initial planning and development. Program design. Coding. Report copy.
 
 \subsection{Sebastian Cram}
 
-Initial planning and development. Program design. Report copy. Report formatting
+Initial planning and development. Program design. Report copy. Report formatting.
 
 \subsection{Derek Galea}
 
-Initial planning and development. Program design.
+Initial planning and development. Program design. Report copy.
 
 %----------------------------------------------------------------------------------------
 %	MAJOR SECTION X - TEMPLATE - UNCOMMENT AND FILL IN
@@ -304,6 +297,14 @@ Accessed April (2015)
 Rao, A. (1996).
 AgentSpeak(:): BDI agents speak out in a logical computable language.
 Lecture Notes in Artificial Intelligence.
+
+%Example Formatting
+
+%\bibitem[Figueredo and Wolf, 2009]{Figueredo:2009dg}
+%Figueredo, A.~J. and Wolf, P. S.~A. (2009).
+%\newblock Assortative pairing and life history strategy - a cross-cultural
+% study.
+%\newblock {\em Human Nature}, 20:317--330.
  
 \end{thebibliography}
 
