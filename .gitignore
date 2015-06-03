@@ -1,11 +1,17 @@
+// helper files
 *.bat
+
+// Jason build files
 *.xml
 *.class
+
+// Jason temp files
 *.asl~
 *.asl#
 *.mas2j~
+
+// Latex files
 *.aux
 report/Multi Agent Mafia Report.log
-*.pdf
 report/Multi Agent Mafia Report.synctex.gz
 *.toc
