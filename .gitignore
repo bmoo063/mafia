@@ -4,3 +4,8 @@
 *.asl~
 *.asl#
 *.mas2j~
+*.aux
+report/Multi Agent Mafia Report.log
+*.pdf
+report/Multi Agent Mafia Report.synctex.gz
+*.toc

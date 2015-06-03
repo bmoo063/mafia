@@ -1,0 +1,215 @@
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[12pt]{article} % Default font size is 12pt, it can be changed here
+
+\usepackage{geometry} % Required to change the page size to A4
+\geometry{a4paper} % Set the page size to be A4 as opposed to the default US Letter
+
+\usepackage{graphicx} % Required for including pictures
+
+\usepackage{float} % Allows putting an [H] in \begin{figure} to specify the exact location of the figure
+\usepackage{wrapfig} % Allows in-line images such as the example fish picture
+
+\linespread{1.2} % Line spacing
+
+%\setlength\parindent{0pt} % Uncomment to remove all indentation from paragraphs
+
+\graphicspath{{Pictures/}} % Specifies the directory where pictures are stored
+
+\begin{document}
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\begin{titlepage}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % Defines a new command for the horizontal lines, change thickness here
+
+\center % Center everything on the page
+
+\textsc{\LARGE University of Auckland}\\[1.5cm] % Name of your university/college
+\textsc{\Large COMPSCI 765}\\[0.5cm] % Major heading such as course name
+\textsc{\large Interactive Cognitive Systems}\\[0.5cm] % Minor heading such as course title
+
+\HRule \\[0.4cm]
+{ \huge \bfseries Multi-Agent Mafia}\\[0.4cm] % Title of your document
+\HRule \\[1.5cm]
+
+\begin{minipage}{0.4\textwidth}
+\begin{flushleft} \large
+\emph{Author:}\\
+Bradley \textsc{Moorfield}\\
+Sebastian \textsc{Cram}\\
+Derek \textsc{Galea}\\
+\end{flushleft}
+\end{minipage}
+~
+\begin{minipage}{0.4\textwidth}
+\begin{flushright} \large
+\emph{UPI:}\\
+bmoo063\\
+scra069\\
+dgal061\\
+\end{flushright}
+\end{minipage}\\[4cm]
+
+{\large \today}\\[3cm] % Date, change the \today to a set date if you want to be precise
+
+%\includegraphics{Logo}\\[1cm] % Include a department/university logo - this will require the graphicx package
+
+\vfill % Fill the rest of the page with whitespace
+
+\end{titlepage}
+
+%----------------------------------------------------------------------------------------
+%	TABLE OF CONTENTS
+%----------------------------------------------------------------------------------------
+
+\tableofcontents 
+\newpage  
+
+%----------------------------------------------------------------------------------------
+%	INTRODUCTION
+%----------------------------------------------------------------------------------------
+
+\section{Introduction} 
+
+%------------------------------------------------
+
+\subsection{Overview} 
+
+Mafia [1] is a social party game where an informed minority, the mafia, conflicts with an uninformed majority, the innocents. The game is typically played with seven to ten players, with two to three mafia for best results. Many variations on the rules exist, but the basic game focuses on the village as a whole debating the identities of the mafia and voting on one player to lynch during the day, with the mafia choosing one player to kill during the night. The game ends when all the mafia have been eliminated, or the mafia outnumber the innocents. Outside of these rules, the players may do anything to try convince the other players of their innocence, or accuse another player of being mafia. 
+
+Other roles can be assigned, including a medic and a sheriff. The medic has an opportunity during the night to select one individual to be saved, should they be targeted by the mafia. The sheriff has an opportunity during the night to select one individual and be informed by the game master whether that person is mafia or not. 
+ 
+The game master controls the flow of the game and decides when to advance the game onto the next phase. They request the individuals with a particular role to take action at the appropriate time and announce the results of the night’s activities. The game master simply applies the rules of the game, so their actions will be coded in as rules based on the game state. 
+
+The other players will not have full knowledge of the game state, so they will form beliefs about the other agents playing the game. They will have beliefs about their own and others’ roles in the game. They can observe the other agents actions in the game and form beliefs based on those observations. Some basic actions include making an accusation, asking others about their beliefs and making claims about their role in the game. To give them some way to assess the truthfulness of other agent’s claims we may include unintentional actions like a wavering voice, hesitation or perspiration. So there would be same chance if an agent lies about their role, they do so in a wavering voice. For example, one agent accuses another of being mafia. The accused claims they are the medic and perspires. The accuser then forms the belief that they are mafia, as do the other agents. Then when the vote is called they are likely to lynch them. 
+
+One potential way to make the inferences about agents roles more complex is to give the agents some rudimentary personality. Then if the accuser believes the accused is a shy person there is a competing explanation for their perspiration. Other relevant personality traits would be aggressiveness and honesty. These traits would influence how often they make accusations or lie. 
+
+%------------------------------------------------
+
+\subsection{Motivation} 
+
+Mafia allows for a variety of challenges from mathematical, computational, and cognitive standpoints. Braverman et al. [2] shows extensive mathematical modelling can be applied to even a simple environment. Computationally it follows from from the likes of the Facade and Versu systems in having a simulated set of agents interacting with a user in order to tell a story. The simulated agents also need to interact with each other, as each agent is independent. 
+
+Haan et al. [3] have previously implemented a simple mafia playing agent to demonstrate their multi-agent framework, however little reasoning of other agents true beliefs was performed. Our goal is for agents (both real and simulated) to be able to make inferences as to the true status of other agents based on individual announcements and other observables, and perhaps uniquely it requires agents to lie and identify the lies of others. This is a cognitively demanding task, so it will be interesting to see if we can find ways to make the agents intelligently deceptive. 
+
+
+%------------------------------------------------
+
+\begin{figure}[H] 
+\center{\includegraphics[width=0.5\linewidth]{flowchart}}
+\caption{Example image.}
+\label{fig:speciation}
+\end{figure}
+
+%----------------------------------------------------------------------------------------
+%	Analysis
+%----------------------------------------------------------------------------------------
+
+\section{Analysis}
+
+The game starts with the game master assigning roles randomly to all of the players. The game master initiates a discussion phase, then begins the first night phase. The game master first asks the mafia to decide together who to assassinate. Then the medic is called on to select someone to save. Then the sheriff is called on to investigate one player. The game master announces the results of the night and assesses whether the game end conditions are met. Agents update their knowledge and beliefs based on the results. The game master then moves the game into the discussion phase. Agents can make announcements about their beliefs or ask others about their beliefs. To ensure discussions don’t go on forever we can limit each agent to two speech actions (this is a problem in real life games and the game master has to exercise judgement about when to terminate discussions). The game master then moves the game into the accusation phase. Each agent can accuse up to two other people. The game master then allows the accused to defend themselves. They may make claims about themselves or a belief about another player. For example, “I am the sheriff, and I know Bob is mafia” or just deny the accusation or remain silent. Then each player casts their vote publically. 
+
+From information about who voted to lynch, inferences can be made, so knowledge about how people voted should be added to each agent’s knowledge base. For example, if one player made an accusation and claimed they were the sheriff and knew the accused was mafia, a vote is taken and the accused is lynched and they turned out to only be a citizen, the accuser was lying. This may lead players to conclude the accuser is mafia. 
+
+The game master again assesses whether the game end conditions are met. If not, another round of discussion takes place. Then another night falls and the night cycle repeats until one team has won.
+
+%----------------------------------------------------------------------------------------
+%	Design
+%----------------------------------------------------------------------------------------
+
+\section{Design}
+
+We intend to implement our multi-agent system using Jason [4], a multi-agent systems development platform. The AgentSpeak language is used to program the behaviour of individual agents, based on the belief-desire-intention software model. Jason is developed in Java and is easily customised, which will allow us to quickly implement a game master and graphical interface to interact with, while we work on building the cognitive agents.
+
+\subsection{Overall Architecture}
+
+\subsection{User Modelling}
+
+\subsection{Planning Logic}
+
+%----------------------------------------------------------------------------------------
+%	Practical
+%----------------------------------------------------------------------------------------
+
+\section{Practical}
+
+\subsection{Ilustration}
+
+\subsection{Limitations}
+
+\subsection{Demonstration}
+
+%----------------------------------------------------------------------------------------
+%	The Team
+%----------------------------------------------------------------------------------------
+
+\section{About the Authors}
+
+\subsection{Bradley Moorfield}
+
+\subsection{Sebastian Cram}
+
+\subsection{Derek Galea}
+
+%----------------------------------------------------------------------------------------
+%	MAJOR SECTION X - TEMPLATE - UNCOMMENT AND FILL IN
+%----------------------------------------------------------------------------------------
+
+%\section{Content Section}
+
+%\subsection{Subsection 1} % Sub-section
+
+% Content
+
+%\begin{figure}[H] 
+%\center{\includegraphics[width=0.5\linewidth]{examplefile}}
+%\caption{Example image.}
+%\label{fig:speciation}
+%\end{figure}
+
+%------------------------------------------------
+
+%\subsection{Subsection 2} % Sub-section
+
+% Content
+
+%----------------------------------------------------------------------------------------
+%	CONCLUSION
+%----------------------------------------------------------------------------------------
+
+\section{Conclusion}
+
+
+%----------------------------------------------------------------------------------------
+%	BIBLIOGRAPHY
+%----------------------------------------------------------------------------------------
+
+\begin{thebibliography}{99} % Bibliography - this is intentionally simple in this template
+
+%[1] The Graduate Mafia Brotherhood of Princeton University: http://www.princeton.edu/~sucharit/~mafia/. Accessed March (2015)
+
+%[2] Braverman, M., Etesami, O., & Mossel, E. (2008). Mafia: A Theoretical Study of Players and Coalitions in a Partial Information Environment. Annals of Applied Probability.
+%[3] Haan, H. W. D., Hesselink, W. H., & Renardel de Lavalette, G. R. (2004). An abstract multi-agent framework applied to a social interaction game. University of Groningen, Johann Bernoulli Institute for Mathematics and Computer Science.
+
+%[4] Jason http://sourceforge.net/projects/jason/ Accessed April (2015)
+
+%Example Formatting
+
+%\bibitem[Figueredo and Wolf, 2009]{Figueredo:2009dg}
+%Figueredo, A.~J. and Wolf, P. S.~A. (2009).
+%\newblock Assortative pairing and life history strategy - a cross-cultural
+% study.
+%\newblock {\em Human Nature}, 20:317--330.
+ 
+\end{thebibliography}
+
+%----------------------------------------------------------------------------------------
+
+\end{document}
