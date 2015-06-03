@@ -9,6 +9,8 @@
 
 \usepackage{graphicx} % Required for including pictures
 
+\usepackage{hyperref} % Required for hyperlinks
+
 \usepackage{float} % Allows putting an [H] in \begin{figure} to specify the exact location of the figure
 \usepackage{wrapfig} % Allows in-line images such as the example fish picture
 
@@ -103,7 +105,7 @@ Haan et al.~\cite{HAA2004} have previously implemented a simple mafia playing ag
 %------------------------------------------------
 
 \begin{figure}[H] 
-\center{\includegraphics[width=0.5\linewidth]{flowchart}}
+\center{\includegraphics[width=\linewidth]{flowchart}}
 \caption{Example image.}
 \label{fig:speciation}
 \end{figure}
@@ -150,7 +152,25 @@ We intend to implement our multi-agent system using Jason~\cite{JAS2015}, a mult
 
 \subsection{Limitations}
 
+There are four key components which could further be implemented. Those being roles, personality, memory, and discourse.
+
+\subsubsection{Roles}
+We only implemented the simplest roles required to form a coherent game, those being villagers and mafia. There are other roles that could be assigned however. These include the doctor who, after the mafia has selected a victim, is allowed to choose one person to live through the night, and the sheriff who once each night can consult the system for the role of another agent.
+
+\subsubsection{Personality}
+Each agent within the system is presently homogeneous. With further development we could see the agents gaining their own seperate attribtes and personalities. For instance one agent could be partiularly charismatic allowing other agents to be more easily convinced by their accusations. Two agents could perhaps feud, leading them to often accuse each othe regardless of plausability.
+
+
+\subsubsection{Memory}
+At present each game takes place in isolation. Further implementation would perhaps allow for a continued memory for the agents. Allowing for grudges that last between games, and forming opinions on the honesty and charisma of other agents.
+
+\subsubsection{Discourse}
+In it's simplest form we implemented only the ability to 'accuse' and 'deny' membership of the mafia. While a full natural language interface might be achievable, we would focus more on expanding how each of those actions take place. Accusations through inference "agents 1 accused agents 5, now agent 1 is dead" vs passion "agent 3 was mafia last game and they killed me!". Even during the voting stages perhaps being able to defend others to sway certain votes.
+
 \subsection{Demonstration}
+
+A working run playing as a member of the mafia is available
+\href{https://www.dropbox.com/s/go9x8617lvtuozv/Mafia%20Demonstration.mp4?dl=0}{here}
 
 %----------------------------------------------------------------------------------------
 %	The Team
