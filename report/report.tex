@@ -82,7 +82,7 @@ dgal061\\
 
 \subsection{Overview} 
 
-Mafia~\cite{PRI2015} is a social party game where an informed minority, the mafia, conflicts with an uninformed majority, the innocents. The game is typically played with seven to ten players, with two to three mafia for best results. Many variations on the rules exist, but the basic game focuses on the village as a whole debating the identities of the mafia and voting on one player to lynch during the day, with the mafia choosing one player to kill during the night. The game ends when all the mafia have been eliminated, or the mafia outnumber the innocents. Outside of these rules, the players may do anything to try convince the other players of their innocence, or accuse another player of being mafia. 
+Mafia~\cite{PRI2015} is a social party game where an informed minority, the mafia, conflicts with an uninformed majority, the villagers. The game is typically played with seven to ten players, with two to three mafia for best results. Many variations on the rules exist, but the basic game focuses on the village as a whole debating the identities of the mafia and voting on one player to lynch during the day, with the mafia choosing one player to kill during the night. The game ends when all the mafia have been eliminated, or the mafia outnumber the villagers. Outside of these rules, the players may do anything to try convince the other players of their innocence, or accuse another player of being mafia. 
 
 Other roles can be assigned, including a medic and a sheriff. The medic has an opportunity during the night to select one individual to be saved, should they be targeted by the mafia. The sheriff has an opportunity during the night to select one individual and be informed by the game master whether that person is mafia or not. 
  
@@ -98,7 +98,7 @@ One potential way to make the inferences about agents roles more complex is to g
 
 \begin{figure}[H] 
 \center{\includegraphics[width=0.75\linewidth]{flow.pdf}}
-\caption{Flow chart diagram of Game master}
+\caption{Flow chart of game progression}
 \end{figure}
 
 %------------------------------------------------
@@ -109,12 +109,6 @@ Mafia allows for a variety of challenges from mathematical, computational, and c
 
 Haan et al.~\cite{HAA2004} have previously implemented a simple mafia playing agent to demonstrate their multi-agent framework. However, little reasoning about other agents' true beliefs was performed. Our goal is for agents (both real and simulated) to be able to make inferences as to the true status of other agents based on individual announcements and other observables, and perhaps uniquely it requires agents to lie and identify the lies of others. This is a cognitively demanding task, so it will be interesting to see if we can find ways to make the agents intelligently deceptive. 
 
-%------------------------------------------------
-
-\begin{figure}[H] 
-\center{\includegraphics[width=0.6\linewidth]{Entitydiagram}}
-\caption{Entity diagram for Multi-Agent Mafia system}
-\end{figure}
 
 %----------------------------------------------------------------------------------------
 %	Analysis
@@ -128,6 +122,16 @@ From information about who voted to lynch, inferences can be made, so knowledge 
 
 The game master again assesses whether the game end conditions are met. If not, another round of discussion takes place. Then another night falls and the night cycle repeats until one team has won.
 
+Figure~\ref{fig:ent} outlines the objects in the system and the actions available to them.
+
+\begin{figure}[H] 
+\center{\includegraphics[trim = 0 10mm 0 0, clip, width=\linewidth]{entityrel}}
+\caption{Objects and actions in the Mafia system}
+\label{fig:ent}
+\end{figure}
+
+
+
 %----------------------------------------------------------------------------------------
 %	Design
 %----------------------------------------------------------------------------------------
@@ -138,13 +142,13 @@ The game master again assesses whether the game end conditions are met. If not, 
 
 Our system is implemented using the Jason Multi-Agent System~\cite{JAS2015}, which provides a framework that allows multiple agents to run simultaneously using a logic-programming BDI language called AgentSpeak~\cite{RAO1996}, communicate with each other, and modify the underlying architecture of agents and the environment.
 
-AgentSpeak encodes agents as a set of beliefs and plans. Beliefs are first-order predicates that define the knowledge of the world as the agent knows it. Plans consist of an event trigger (either the addition or deletion of a belief), a context defined as the conjugation of beliefs, and a sequence of actions that the agent has to achieve when a plan is chosen for execution.
+AgentSpeak encodes agents as a set of beliefs and plans. Beliefs are first-order predicates that define the knowledge of the world as the agent knows it. Plans consist of an event trigger (either the addition or deletion of a belief), a context defined as the conjugation of beliefs that must be true for a plan to be considered, and a sequence of actions that the agent has to achieve when a plan is chosen for execution.
 
 The extended implementation of AgentSpeak used in Jason provides two important internal actions: broadcast and sent. These actions allow an agent to either broadcast a message to all other agents, or send a message to a specific agent. Messages consist of an illocutionary force, a sender, a reciever, and a belief literal. Agents communicate their beliefs by broadcasting their accusations and denials to all, or participate in the game by sending their votes to the game controller.
 
 The overall structure of the system is shown in figure~\ref{fig:overallarch}. The Jason interpreter is responsible for distributing messages from a broadcast or send, so all agents interact with each other through this central hub. In this implementation, the game controller is implemented as an agent that does no reasoning, it simply acts as a man in the middle to intercept communication and keep track of the game.
 
-The game controller has a modified agent architecture. This is a feature of Jason whereby we can write Java code that changes how the agent deals with receiving beliefs, in this case it keeps track of the state of the game, and counts votes that are sent by other agents. The game controller is also able to send out beliefs that tell the agents when the state of the game changes, this happens when the user presses the 'next state' button on the interface presented by the game controller.
+The game controller has a modified agent architecture. This is a feature of Jason whereby we can write Java code that changes how the agent deals with receiving beliefs, in this case it keeps track of the state of the game, and counts votes that are sent by other agents. The game controller is also able to send out beliefs that tell the agents when the state of the game changes, this happens when the user presses the ``next state" button on the interface presented by the game controller.
 
 The final piece of the puzzle, the user, interacts through the game controller interface. The interface consists of buttons that allow the user to perform actions similar to those that the agents can perform, such as accusing, denying, voting during the town vote or voting during the mafia decision. The buttons become enabled and disabled depending on the state of the game and whether or not the human agent is still alive. The game controller broadcasts messages on behalf of the user whenever the user presses the button for a corresponding action.
 
@@ -157,7 +161,13 @@ The final piece of the puzzle, the user, interacts through the game controller i
 
 \subsection{User Modelling}
 
+User modelling is quite simple in our system. Every public interaction made during the game is stored in the belief base of all agents, these include accusations, denials, who voted for who during town voting, who was lynched and who died at the hands of the mafia. These beliefs are used in the context of plans to update knowledge on who the agent believes is mafia (or who is a target to kill if the agent is mafia themself).
+
 \subsection{Planning Logic}
+
+Jason and AgentSpeak provide powerful constructs for adding goals, which manifest as desires in BDI terminoligy. These goals or desires can be used to allow an agent to plan out in the long term a ``strategy" to use, such as focusing on convincing a particular agent it isn't mafia. In our implementation we haven't used any of these long term goals, so the agents are only reactive and pick the first set of beliefs that satisfies a plan when a plan is executed.
+
+Our system does have some rules that allow it to reason about who is mafia or a target, which encode how an agent plans to vote during voting stages of the game. An example would be a rule that says if agent A accused agent B, and the mafia killed agent A during the night, then agent B was likely an accurate accusation. However mafia can take advantage of this situation too: if A accuses B, B is not mafia, and mafia don't have a particular target to kill, then B could be a good choice to lead villagers astray. This problem is mentioned in the limitations section of our report.
 
 %----------------------------------------------------------------------------------------
 %	Practical
@@ -220,7 +230,7 @@ Each agent within the system is presently homogeneous. With further development 
 At present each game takes place in isolation. Further implementation would perhaps allow persistent memory for the agents. Grudges could be held that last between games. Agents would form opinions on the honesty and charisma of other agents based on their past actions.
 
 \subsubsection{Discourse}
-In it's simplest form we implemented only the ability to 'accuse' and 'deny' membership of the mafia. While a full natural language interface might be achievable, we would focus more on expanding how each of those actions take place. Accusations could be arrived at through inference: "agent 1 accused agent 5, and now agent 1 is dead, so agent 5 must have recognised agent 1 as a threat and killed him" or through emotion: "agent 3 was mafia last game and they killed me!". Also, during the voting stages an eloquent defense of the accused could sway the votes of others.
+In it's current form, discourse takes the form of agents publicly announcing who they believe are mafia, and denying an accusation. Currently denials have no effect on what other agents believe, as they would otherwise negate the effect of an accusation, as all statements broadcast are added as absolute beliefs to the other agents belief bases. Discourse could thus be improved in two ways: a more prevalent ``discussion" where agents begin talking about one subject and discuss it until no agent has any more to say, this would require adding another level to the agents rule base that allows them to set long term goals and build desires. The second way to improve discourse would be to attach a believability value to each statement. This would tie in with personality, as a more charismatic agent would be more likely to make believable statements. Also, believability could be influenced by the consistency of a statement, e.g. if they denied an accusation by claiming they had an alibi.
 
 \subsection{Demonstration}
 
@@ -235,15 +245,15 @@ A working run playing as a member of the mafia is available
 
 \subsection{Bradley Moorfield}
 
-Initial planning and development. Program design. Coding. Report copy.
+Worked on the initial planning and development of project proposal. Helped design the propram, did all the coding. Final report writing.
 
 \subsection{Sebastian Cram}
 
-Initial planning and development. Program design. Report copy. Report formatting.
+Worked on initial planning and development of project proposal. Helped design program. Final report writing and formatting.
 
 \subsection{Derek Galea}
 
-Initial planning and development. Program design. Report copy.
+Worked on initial planning and development of project proposal. Helped design program. Final report writing.
 
 %----------------------------------------------------------------------------------------
 %	MAJOR SECTION X - TEMPLATE - UNCOMMENT AND FILL IN
