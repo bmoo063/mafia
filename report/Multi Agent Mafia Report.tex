@@ -167,33 +167,43 @@ The final piece of the puzzle, the user, interacts through the game controller i
 
 \subsection{Ilustration}
 
+Unlike other systems which may have to work with abstract test cases, the advantage in a game system is that testing is simply done by playing. What follows is a step through what a player would expect to see when playing. 
+
 \begin{figure}[H]
 \centering
 \begin{minipage}{0.49\textwidth}
 \centering
 \includegraphics[width=\linewidth]{mafia-start}
 \caption{Start State}
+\label{fig:start}
 \end{minipage}\hfill
 \begin{minipage}{0.49\textwidth}
 \centering
 \includegraphics[width=\linewidth]{mafia-discussion}
 \caption{First round of accusations}
+\label{fig:discussion}
 \end{minipage}
 \end{figure}
+
+Figure \ref{fig:start} is an example of what appears upon initiation of the system, it allows an agent to see their randomly assigned role and, in the case of mafia, who the other mafia agents are. Figure \ref{fig:discussion} shows what, if anything, each agent publically announces. The actions the player may take in the current implementation are limited to simply accusing another agent, or defending one who has already been accused. Taken to it's extreme this could be accomplished with a natural language interface, this is sufficient as a demonstration of the system.
 
 \begin{figure}[H]
 \centering
 \begin{minipage}{0.49\textwidth}
 \centering
-\includegraphics[width=\linewidth]{mafia-mafiavote}
-\caption{Mafia agents voting who to kill}
+\includegraphics[width=\linewidth]{mafia-townvote}
+\caption{All agents voting who to kill}
+\label{fig:tvote}
 \end{minipage}\hfill
 \begin{minipage}{0.49\textwidth}
 \centering
-\includegraphics[width=\linewidth]{mafia-townvote}
-\caption{All agents voting who to kill}
+\includegraphics[width=\linewidth]{mafia-mafiavote}
+\caption{Mafia agents voting who to kill}
+\label{fig:mvote}
 \end{minipage}
 \end{figure}
+
+From here each agent decides who, if anyone, will be eliminated from the game. Figure \ref{fig:tvote} 
 
 \subsection{Limitations}
 
