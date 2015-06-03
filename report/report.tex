@@ -157,7 +157,12 @@ The final piece of the puzzle, the user, interacts through the game controller i
 
 \subsection{User Modelling}
 
+User modelling is quite simple in our system. Every public interaction made during the game is stored in the belief base of all agents, these include accusations, denials, who voted for who during town voting, who was lynched and who died at the hands of the mafia. These beliefs are used in the context of plans to update knowledge on who the agent believes is mafia (or who is a target to kill if the agent is mafia themself).
+
+
 \subsection{Planning Logic}
+
+Jason and AgentSpeak provide powerful constructs for adding goals, which manifest as desires in BDI terminoligy. These goals or desires can be used to allow an agent to plan out in the long term a 'strategy' to use, such as focusing on convincing a particular agent it isn't mafia. In our implementation we haven't used any of these long term goals, so the agents are only reactive.
 
 %----------------------------------------------------------------------------------------
 %	Practical
@@ -297,14 +302,6 @@ Accessed April (2015)
 Rao, A. (1996).
 AgentSpeak(:): BDI agents speak out in a logical computable language.
 Lecture Notes in Artificial Intelligence.
-
-%Example Formatting
-
-%\bibitem[Figueredo and Wolf, 2009]{Figueredo:2009dg}
-%Figueredo, A.~J. and Wolf, P. S.~A. (2009).
-%\newblock Assortative pairing and life history strategy - a cross-cultural
-% study.
-%\newblock {\em Human Nature}, 20:317--330.
  
 \end{thebibliography}
 
