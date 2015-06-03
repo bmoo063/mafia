@@ -162,7 +162,9 @@ User modelling is quite simple in our system. Every public interaction made duri
 
 \subsection{Planning Logic}
 
-Jason and AgentSpeak provide powerful constructs for adding goals, which manifest as desires in BDI terminoligy. These goals or desires can be used to allow an agent to plan out in the long term a 'strategy' to use, such as focusing on convincing a particular agent it isn't mafia. In our implementation we haven't used any of these long term goals, so the agents are only reactive.
+Jason and AgentSpeak provide powerful constructs for adding goals, which manifest as desires in BDI terminoligy. These goals or desires can be used to allow an agent to plan out in the long term a 'strategy' to use, such as focusing on convincing a particular agent it isn't mafia. In our implementation we haven't used any of these long term goals, so the agents are only reactive and pick the first set of beliefs that satisfies a plan when a plan is executed.
+
+Our system does have some rules that allow it to reason about who is mafia or a target, which encode how an agent plans to vote during voting stages of the game. An example would be a rule that says if agent A accused agent B, and the mafia killed agent A during the night, then agent B was likely an accurate accusation. However mafia can take advantage of this situation too: if A accuses B, B is not mafia, and mafia don't have a particular target to kill, then B could be a good choice to lead villagers astray. This problem is mentioned in the limitations section of our report.
 
 %----------------------------------------------------------------------------------------
 %	Practical
