@@ -15,3 +15,6 @@
 report/Multi Agent Mafia Report.log
 report/Multi Agent Mafia Report.synctex.gz
 *.toc
+*.out
+report/Multi Agent Mafia Report.pdf
+*.pdf
